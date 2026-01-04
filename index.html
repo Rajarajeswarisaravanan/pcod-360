@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PCOD Companion App</title>
+  <meta charset="UTF-8" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7, #cdb4db);
+    }
+
+    .hidden { display: none; }
+
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      width: 320px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      margin: auto;
+      margin-top: 80px;
+    }
+
+    h2 {
+      color: #c9184a;
+      text-align: center;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+    }
+
+    button {
+      background: #ff4d6d;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 12px;
+      width: 100%;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    button:hover { background: #e5383b; }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 25px;
+      background: #ff4d6d;
+      color: white;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .profile img {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+
+    .logout {
+      background: white;
+      color: #ff4d6d;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      width: auto;
+    }
+
+    .dashboard {
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+      gap: 15px;
+    }
+
+    .feature {
+      background: #fff0f3;
+      color: #c9184a;
+      padding: 18px;
+      border-radius: 16px;
+      font-weight: 600;
+    }
+
+    .feature:hover { background: #ffd6e0; }
+
+    .back {
+      margin-top: 15px;
+      background: #cdb4db;
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login" class="card">
+  <h2>🌸 Login</h2>
+  <input id="loginUser" placeholder="Username">
+  <input id="loginPass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <p style="text-align:center">
+    New user? <a href="#" onclick="show('signup')">Sign up</a>
+  </p>
+</div>
+
+<!-- SIGNUP -->
+<div id="signup" class="card hidden">
+  <h2>✨ Sign Up</h2>
+  <input id="name" placeholder="Full Name">
+  <input id="username" placeholder="Username">
+  <input id="mobile" placeholder="Mobile Number">
+  <input id="password" type="password" placeholder="Password">
+  <button onclick="signup()">Create Account</button>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" class="hidden">
+  <div class="navbar">
+    <button class="logout" onclick="logout()">Logout</button>
+    <div class="profile">
+      <img src="https://i.imgur.com/6VBx3io.png">
+      <span id="dashUser"></span>
+    </div>
+  </div>
+
+  <div class="dashboard">
+    <button class="feature" onclick="show('cycle')">🩸 Cycle</button>
+    <button class="feature" onclick="show('symptoms')">🤕 Symptoms</button>
+    <button class="feature" onclick="show('lifestyle')">🌿 Lifestyle</button>
+    <button class="feature" onclick="show('mood')">😊 Mood</button>
+    <button class="feature" onclick="show('weight')">⚖ Weight</button>
+    <button class="feature" onclick="show('history'); loadHistory()">📊 History</button>
+    <button class="feature" onclick="show('ai')">🤖 AI Insights</button>
+  </div>
+</div>
+
+<!-- CYCLE -->
+<div id="cycle" class="card hidden">
+  <h2>🩸 Cycle Tracker</h2>
+  <input type="date" id="lastPeriod">
+  <input type="number" id="cycleLength" placeholder="Cycle length (days)">
+  <button onclick="saveCycle()">Save</button>
+  <button class="back" onclick="show('dashboard')">⬅ Back</button>
+</div>
+
+<!-- SYMPTOMS -->
+<div id="symptoms" class="card hidden">
+  <h2>🤕 Symptoms</h2>
+  <label><input type="checkbox" value="Acne"> Acne</label><br>
+  <label><input type="checkbox" value="Hair Loss"> Hair Loss</label><br>
+  <label><input type="checkbox" value="Migraine"> Migraine</label><br>
+  <label><input type="checkbox" value="Stomach Ache"> Stomach Ache</label><br>
+  <button onclick="saveSymptoms()">Save</button>
+  <button class="back" onclick="show('dashboard')">⬅ Back</button>
+</div>
+
+<!-- LIFESTYLE -->
+<div id="lifestyle" class="card hidden">
+  <h2>🌿 Lifestyle</h2>
+  <select id="activity">
+    <option>Very Active 💪</option>
+    <option>Moderate 🚶‍♀️</option>
+    <option>Low Energy 😴</option>
+  </select>
+  <select id="stress">
+    <option>Low 😌</option>
+    <option>Medium 😐</option>
+    <option>High 😣</option>
+  </select>
+  <button onclick="saveLifestyle()">Save</button>
+  <button class="back" onclick="show('dashboard')">⬅ Back</button>
+</div>
+
+<!-- HISTORY -->
+<div id="history" class="card hidden">
+  <h2>📊 Health History</h2>
+  <div id="historyContent" style="font-size:14px; line-height:1.6;"></div>
+  <button class="back" onclick="show('dashboard')">⬅ Back</button>
+</div>
+
+<!-- AI -->
+<div id="ai" class="card hidden">
+  <h2>🤖 AI Insights</h2>
+  <p style="text-align:center">
+    Future AI risk prediction<br>
+    Low / Medium / High PCOD
+  </p>
+  <button class="back" onclick="show('dashboard')">⬅ Back</button>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
